@@ -295,6 +295,81 @@
       text-align: justify;
     }
 
+    /* ===== SLIDER FOTO LPTK & SEKOLAH ===== */
+    .slider-container {
+      position: relative;
+      width: 100%;
+      height: 180px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .slider-images {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .slider-images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.4);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      z-index: 10;
+      transition: 0.2s;
+    }
+
+    .slider-btn:hover {
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .slider-btn.prev {
+      left: 6px;
+    }
+
+    .slider-btn.next {
+      right: 6px;
+    }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      z-index: 10;
+    }
+
+    .slider-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .slider-dots span.active {
+      background: white;
+      transform: scale(1.2);
+    }
+
     /* ===== KOMPONEN CARD ===== */
     .komponen-grid {
       display: grid;
@@ -1013,6 +1088,20 @@
           <h3>LPTK – ULM Banjarmasin</h3>
           <p>Universitas Lambung Mangkurat, LPTK unggul dalam mencetak guru profesional berbasis IPTEKS dan kearifan
             lokal lahan basah. Akreditasi Unggul.</p>
+          <div class="slider-container" id="sliderLptk">
+            <div class="slider-images">
+              <img src="ulm2.jpg" alt="ULM Banjarmasin 1"
+                onerror="this.src='https://placehold.co/800x400/1e4a6e/white?text=ULM+Banjarmasin+1'">
+              <img src="fkip.png" alt="ULM Banjarmasin 2"
+                onerror="this.src='https://placehold.co/800x400/2c5f8a/white?text=ULM+Banjarmasin+2'">
+            </div>
+            <button class="slider-btn prev" onclick="slideLptk(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="slider-btn next" onclick="slideLptk(1)"><i class="fas fa-chevron-right"></i></button>
+            <div class="slider-dots" id="dotsLptk">
+              <span class="active" onclick="goToSlideLptk(0)"></span>
+              <span onclick="goToSlideLptk(1)"></span>
+            </div>
+          </div>
         </div>
 
         <div class="info-card">
@@ -1020,6 +1109,20 @@
           <h3>Sekolah PPL – SMK Negeri 4 Banjarmasin</h3>
           <p>Sekolah mitra pelaksanaan PPL Mandiri. SMK Negeri 4 Banjarmasin dikenal sebagai pusat keunggulan bidang
             teknologi dan kejuruan.</p>
+          <div class="slider-container" id="sliderSekolah">
+            <div class="slider-images">
+              <img src="smk41.jpg" alt="SMKN 4 Banjarmasin 1"
+                onerror="this.src='https://placehold.co/800x400/1e4a6e/white?text=SMKN+4+Banjarmasin+1'">
+              <img src="smk4.jpg" alt="SMKN 4 Banjarmasin 2"
+                onerror="this.src='https://placehold.co/800x400/2c5f8a/white?text=SMKN+4+Banjarmasin+2'">
+            </div>
+            <button class="slider-btn prev" onclick="slideSekolah(-1)"><i class="fas fa-chevron-left"></i></button>
+            <button class="slider-btn next" onclick="slideSekolah(1)"><i class="fas fa-chevron-right"></i></button>
+            <div class="slider-dots" id="dotsSekolah">
+              <span class="active" onclick="goToSlideSekolah(0)"></span>
+              <span onclick="goToSlideSekolah(1)"></span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1304,8 +1407,9 @@
               <h4 style="color: #0c4a6e; margin-bottom: 10px; margin-top: 2rem;">File Media Pembelajaran (PPT)</h4>
               <div class="media-wrapper" style="height: 500px;">
                 <!-- Link PPT Baru -->
-                <iframe src="https://docs.google.com/presentation/d/1ie-WYG9Dm5o-bTCs9qvvdDjcrK3LDksC/embed?usp=sharing&ouid=108904220182701909952&rtpof=true&sd=true
-                  frameborder=" 0" allowfullscreen="true" mozallowfullscreen="true"
+                <iframe
+                  src="https://docs.google.com/presentation/d/1ie-WYG9Dm5o-bTCs9qvvdDjcrK3LDksC/embed?usp=sharing&ouid=108904220182701909952&rtpof=true&sd=true"
+                  frameborder="0" allowfullscreen="true" mozallowfullscreen="true"
                   webkitallowfullscreen="true"></iframe>
               </div>
             </div>
@@ -1550,6 +1654,63 @@
       document.getElementById('tab-' + tabName).classList.add('active');
       btnElement.classList.add('active');
     }
+
+    // ==========================================
+    // SLIDER FUNCTIONS (LPTK & SEKOLAH)
+    // ==========================================
+    let slideIndexLptk = 0;
+    const slidesLptk = document.querySelectorAll('#sliderLptk .slider-images img');
+    const dotsLptk = document.querySelectorAll('#dotsLptk span');
+
+    function showSlideLptk(index) {
+      if (!slidesLptk.length) return;
+      if (index >= slidesLptk.length) slideIndexLptk = 0;
+      if (index < 0) slideIndexLptk = slidesLptk.length - 1;
+      const slider = document.querySelector('#sliderLptk .slider-images');
+      if (slider) slider.style.transform = 'translateX(-' + (slideIndexLptk * 100) + '%)';
+      dotsLptk.forEach(function (dot, i) {
+        dot.classList.toggle('active', i === slideIndexLptk);
+      });
+    }
+
+    function slideLptk(direction) {
+      slideIndexLptk += direction;
+      showSlideLptk(slideIndexLptk);
+    }
+
+    function goToSlideLptk(index) {
+      slideIndexLptk = index;
+      showSlideLptk(slideIndexLptk);
+    }
+
+    let slideIndexSekolah = 0;
+    const slidesSekolah = document.querySelectorAll('#sliderSekolah .slider-images img');
+    const dotsSekolah = document.querySelectorAll('#dotsSekolah span');
+
+    function showSlideSekolah(index) {
+      if (!slidesSekolah.length) return;
+      if (index >= slidesSekolah.length) slideIndexSekolah = 0;
+      if (index < 0) slideIndexSekolah = slidesSekolah.length - 1;
+      const slider = document.querySelector('#sliderSekolah .slider-images');
+      if (slider) slider.style.transform = 'translateX(-' + (slideIndexSekolah * 100) + '%)';
+      dotsSekolah.forEach(function (dot, i) {
+        dot.classList.toggle('active', i === slideIndexSekolah);
+      });
+    }
+
+    function slideSekolah(direction) {
+      slideIndexSekolah += direction;
+      showSlideSekolah(slideIndexSekolah);
+    }
+
+    function goToSlideSekolah(index) {
+      slideIndexSekolah = index;
+      showSlideSekolah(slideIndexSekolah);
+    }
+
+    // Auto-slide tiap 4 detik
+    setInterval(function () { if (document.querySelector('#sliderLptk')) slideLptk(1); }, 4000);
+    setInterval(function () { if (document.querySelector('#sliderSekolah')) slideSekolah(1); }, 4000);
 
     // Jalankan navigasi awal ke home
     navigateTo('home');
